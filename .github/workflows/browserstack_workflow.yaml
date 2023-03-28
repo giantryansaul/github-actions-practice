@@ -1,0 +1,15 @@
+name: browserstack workflow
+
+on:
+  workflow_call:
+    secrets:
+      BROWSERSTACK_KEY:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: See if browserstack has available spots
+        run: curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json

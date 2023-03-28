@@ -1,0 +1,14 @@
+name: use browserstack
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+jobs:
+  use-browserstack-workflow:
+    uses: ./.github/workflows/browserstack_workflow.yaml
+    secrets:
+      BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}
