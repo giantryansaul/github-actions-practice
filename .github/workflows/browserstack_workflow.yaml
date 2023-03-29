@@ -14,17 +14,17 @@ jobs:
       - name: Request if Browserstack has available spots
         run: | 
           response=$(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json)
-          echo $response
-        id: availabilityrequest
+          echo "RESPONSE=$response" >> $GITHUB_OUTPUT
+        id: availability-request
       - name: Parse availability from Browserstack
         run: |
-          parallel_sessions_running=$(echo "${{ steps.availabilityrequest.outputs.response }}" | jq -r '.parallel_sessions_running')
-          parallel_sessions_max_allowed=$(echo "${{ steps.availabilityrequest.outputs.response }}" | jq -r '.parallel_sessions_max_allowed')
-          echo "::set-output name=parallel_sessions_running::$parallel_sessions_running"
-          echo "::set-output name=parallel_sessions_max_allowed::$parallel_sessions_max_allowed"
-        id: parseavailabilityresponse
+          parallel_sessions_running=$(echo "${{ steps.availability-request.outputs.RESPONSE }}" | jq -r '.parallel_sessions_running')
+          parallel_sessions_max_allowed=$(echo "${{ steps.availability-request.outputs.RESPONSE }}" | jq -r '.parallel_sessions_max_allowed')
+          echo "SESSIONS_RUNNING=$parallel_sessions_running" >> $GITHUB_OUTPUT
+          echo "MAX_ALLOWED_SESSIONS=$parallel_sessions_max_allowed" >> $GITHUB_OUTPUT
+        id: parse-availability-response
         continue-on-error: true
       - name: Use params in next step
         run: |
-          echo "Parallel running: ${{ steps.parseavailabilityresponse.parallel_sessions_running}}
-          echo "Max Parallel: ${{ steps.parseavailabilityresponse.parallel_sessions_max_allowed}}
+          echo "Parallel running: ${{ steps.parse-availability-response.outputs.SESSIONS_RUNNING}}
+          echo "Max Parallel: ${{ steps.parse-availability-response.outputs.MAX_ALLOWED_SESSIONS}}
