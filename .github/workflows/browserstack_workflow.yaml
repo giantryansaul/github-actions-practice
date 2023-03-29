@@ -18,8 +18,8 @@ jobs:
         id: availabilityrequest
       - name: Parse availability from Browserstack
         run: |
-          parallel_sessions_running=$(echo "${{ steps.availabilityrequest.outputs.response }}"" | jq -r '.parallel_sessions_running')
-          parallel_sessions_max_allowed=$(echo "${{ steps.availabilityrequest.outputs.response }}"" | jq -r '.parallel_sessions_max_allowed')
+          parallel_sessions_running=$(echo "${{ steps.availabilityrequest.outputs.response }}" | jq -r '.parallel_sessions_running')
+          parallel_sessions_max_allowed=$(echo "${{ steps.availabilityrequest.outputs.response }}" | jq -r '.parallel_sessions_max_allowed')
           echo "::set-output name=parallel_sessions_running::$parallel_sessions_running"
           echo "::set-output name=parallel_sessions_max_allowed::$parallel_sessions_max_allowed"
         id: parseavailabilityresponse
