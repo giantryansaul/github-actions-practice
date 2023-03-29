@@ -14,9 +14,9 @@ jobs:
       - name: Wait for Browserstack to have available automation slots
         run: | 
           while true; do
-            # response=$(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json)
-            # if [[ $(echo $response | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') = true ]]; then
-            if [[ $(echo '{"parallel_sessions_running":5,"parallel_sessions_max_allowed":5}' | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') = true ]]; then
+            response=$(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json)
+            echo "Browserstack license: $response"
+            if [[ $(echo $response | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') = true ]]; then
               break
             fi
             echo "Browserstack is busy. Waiting 10s to try again"
