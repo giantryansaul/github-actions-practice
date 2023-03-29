@@ -14,9 +14,7 @@ jobs:
       - name: Request if Browserstack has available spots
         run: | 
           while true; do
-            response=$(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json)
-            echo "RESPONSE=$response" >> $GITHUB_OUTPUT
-            if [[ $response | jq '.parallel_sessions_running < .parallel_sessions_max_allowed' ]]; then
+            if [[ echo $(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json) | jq '.parallel_sessions_running < .parallel_sessions_max_allowed' ]]; then
               break
             fi
             sleep 10
