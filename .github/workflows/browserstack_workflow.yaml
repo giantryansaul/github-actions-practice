@@ -11,5 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: See if browserstack has available spots
-        run: curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json
+      - name: Request if Browserstack has available spots
+        run: | 
+          response=$(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json)
+          echo $response
+        id: availabilityrequest
+      - name: Parse availability from Browserstack
+        run: |
+          parallel_sessions_running=$(echo "${{ steps.availabilityrequest.outputs.response }}"" | jq -r '.parallel_sessions_running')
+          parallel_sessions_max_allowed=$(echo "${{ steps.availabilityrequest.outputs.response }}"" | jq -r '.parallel_sessions_max_allowed')
+          echo "::set-output name=parallel_sessions_running::$parallel_sessions_running"
+          echo "::set-output name=parallel_sessions_max_allowed::$parallel_sessions_max_allowed"
+        id: parseavailabilityresponse
+        continue-on-error: true
+      - name: Use params in next step
+        run: |
+          echo "Parallel running: ${{ steps.parseavailabilityresponse.parallel_sessions_running}}
+          echo "Max Parallel: ${{ steps.parseavailabilityresponse.parallel_sessions_max_allowed}}
