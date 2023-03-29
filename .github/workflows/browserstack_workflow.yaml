@@ -11,15 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Request if Browserstack has available spots
+      - name: Wait for Browserstack to have available automation slots
         run: | 
           while true; do
-            if [[ $(echo $(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json) | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') ]]; then
+            # if [[ $(echo $(curl -u ${{ secrets.BROWSERSTACK_KEY }} https://api.browserstack.com/automate/plan.json) | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') ]]; then
+            if [[ $(echo '{"parallel_sessions_running":5,"parallel_sessions_max_allowed":5}' | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') ]]; then
               break
             fi
+            echo "Browserstack is busy. Waiting 10s to try again"
             sleep 10
           done
         id: availability-request
+        timeout-minutes: 1
 
       # - name: Parse availability from Browserstack
       #   run: |
