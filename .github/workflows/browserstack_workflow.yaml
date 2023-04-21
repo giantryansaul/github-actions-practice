@@ -21,8 +21,8 @@ jobs:
             if [[ $(echo $AutomateResponse | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') = true && $(echo $AppAutomateResponse | jq '.parallel_sessions_running < .parallel_sessions_max_allowed') = true ]]; then
               break
             fi
-            echo "Browserstack is busy. Waiting 10s to try again"
-            sleep 10
+            echo "Browserstack is busy. Waiting 19s to try again"
+            sleep 19
           done
         id: availability-request
         timeout-minutes: 1

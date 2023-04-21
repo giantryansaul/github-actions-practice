@@ -1,0 +1,35 @@
+name: iterate artifacts
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create text files
+      run: |
+        echo "Hello, world!" > file1.txt
+        echo "Goodbye, world!" > file2.txt
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name1: file1.txt
+        path1: file1.txt
+        name2: file2.txt
+        path2: file2.txt
+
+    - name: Iterate over artifacts
+      run: |
+        # Download the artifacts to the current directory
+        for artifact in $(find $GITHUB_WORKSPACE -name "*.txt"); do
+          echo "Artifact found: $artifact"
+          cat "$artifact"
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

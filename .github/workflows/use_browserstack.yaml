@@ -1,11 +1,5 @@
 name: use browserstack
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+on: 
   workflow_dispatch:
 jobs:
   use-browserstack-workflow:
