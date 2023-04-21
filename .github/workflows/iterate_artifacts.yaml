@@ -17,19 +17,12 @@ jobs:
         echo "Goodbye, world!" > file2.txt
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        name1: file1.txt
-        path1: file1.txt
-        name2: file2.txt
-        path2: file2.txt
+        path: *.txt
 
     - name: Iterate over artifacts
       run: |
-        # Download the artifacts to the current directory
-        for artifact in $(find $GITHUB_WORKSPACE -name "*.txt"); do
-          echo "Artifact found: $artifact"
-          cat "$artifact"
+        for artifact in ${{ steps.list-urls.outputs.artifacts }}; do
+          echo "Artifact URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/raw/${{ github.ref }}/${artifact}"
         done
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
