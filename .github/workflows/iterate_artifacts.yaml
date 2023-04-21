@@ -20,7 +20,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: my-artifacts
-        path: ./*.txt
+        path: ./file1.txt
 
     - name: Iterate over artifacts
       run: |
